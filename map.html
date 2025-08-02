@@ -4,29 +4,34 @@
   <meta charset="UTF-8">
   <title>Карта персонажей</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      font-family: sans-serif;
+      padding: 0;
+      width: 100%;
+      height: 100%;
       background-color: #222;
+      font-family: sans-serif;
+    }
+
+    #container {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
-    #scale-wrapper {
-      transform: scale(0.75);
-      transform-origin: top left;
-      width: 1600px;
-      height: 1066px;
-    }
+
     #map-container {
       position: relative;
-      width: 1152px;
-      height: 768px;
-      background: url("map.jpg") no-repeat center/cover;
+      width: 1536px;
+      height: 1536px;
+      background: url("map.jpg") no-repeat top left;
+      background-size: contain;
       border: 2px solid #444;
-      margin-top: 20px;
       user-select: none;
     }
+
     .character {
       position: absolute;
       width: 64px;
@@ -34,40 +39,43 @@
       cursor: grab;
       transition: transform 0.1s, left 0.2s, top 0.2s;
     }
+
     .character:active {
       cursor: grabbing;
       transform: scale(1.1);
     }
+
     #name-display {
-      margin-top: 10px;
+      margin-top: 4px;
       color: #fff;
-      font-size: 18px;
-      min-height: 28px;
+      font-size: 16px;
+      min-height: 24px;
       background: #333;
-      padding: 6px 16px;
-      border-radius: 10px;
+      padding: 4px 12px;
+      border-radius: 8px;
     }
+
     #lock-btn {
-      margin-top: 10px;
+      margin-top: 6px;
       background: #444;
       color: #fff;
       border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
       cursor: pointer;
       transition: background 0.2s;
     }
+
     #lock-btn:hover {
       background: #666;
     }
   </style>
 
-  <!-- Firebase v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
-  <div id="scale-wrapper">
+  <div id="container">
     <div id="map-container">
       <img src="percy/silas.png" class="character" data-name="Сайлас МакГроу" style="top:550px; left:550px;">
       <img src="percy/clement.png" class="character" data-name="Клемент Гаскойн" style="top:120px; left:200px;">
@@ -92,7 +100,7 @@
       authDomain: "my-map-project-19aca.firebaseapp.com",
       databaseURL: "https://my-map-project-19aca-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "my-map-project-19aca",
-      storageBucket: "my-map-project-19aca.firebasestorage.app",
+      storageBucket: "my-map-project-19aca.appspot.com",
       messagingSenderId: "55009805586",
       appId: "1:55009805586:web:f4515be484191f23979fcb"
     };
@@ -107,8 +115,7 @@
     let isDragging = false;
     let dragged = null, offsetX = 0, offsetY = 0;
 
-    const sanitizeKey = (src) =>
-      src.replace(/[.#$/\[\]]/g, "_");
+    const sanitizeKey = (src) => src.replace(/[.#$/\[\]]/g, "_");
 
     const savePositions = () => {
       const positions = {};
